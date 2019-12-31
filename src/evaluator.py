@@ -8,7 +8,7 @@ class Evaluator:
     def __init__(self, expr):
         all_vars = expr.encode('ascii', 'ignore')\
             .translate(None, b'+-*()').decode()
-        self.variables = set(all_vars)
+        self.variables = sorted(list(set(all_vars)))
         self.disjoints = list(map(Evaluator.parse_disjoint, expr.split('*')))
 
     def score(self, value_set):
@@ -45,3 +45,9 @@ class Evaluator:
             if vx or vy:
                 res += 1
         return res
+
+    def get_variables(self):
+        nums = dict()
+        for num, var in enumerate(self.variables):
+            nums.update({var: num})
+        return nums
