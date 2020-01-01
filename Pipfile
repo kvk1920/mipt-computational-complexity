@@ -7,11 +7,12 @@ name = "pypi"
 matplotlib = "*"
 ipython = "*"
 jupyter = "*"
-scipy = "*"
 numpy = "*"
 cvxpy = "*"
 pep8 = "*"
 pycodestyle = "*"
+cvxopt = "*"
+scipy = "*"
 
 [dev-packages]
 

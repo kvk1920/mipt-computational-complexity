@@ -1,4 +1,4 @@
-from evaluator import Evaluator
+from py.evaluator import Evaluator
 import sys
 
 

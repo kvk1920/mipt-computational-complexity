@@ -1,4 +1,4 @@
-from evaluator import Evaluator
+from py.evaluator import Evaluator
 import cvxpy as cp
 import numpy as np
 import scipy.stats as sps
@@ -41,7 +41,7 @@ def solve(expr: str, num_tests: int = 50) -> tuple:
 
 
 def main():
-    for line in open("test"):
+    for line in sys.stdin:
         values, scores = solve(line.strip())
         print("2sat:", line.strip(), "mean score:", np.mean(scores), sep='\n')
 
