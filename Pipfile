@@ -8,6 +8,7 @@ numpy = "*"
 cvxpy = "*"
 cvxopt = "*"
 scs = "*"
+matplotlib = "*"
 
 [dev-packages]
 

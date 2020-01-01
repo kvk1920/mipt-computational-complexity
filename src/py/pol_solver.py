@@ -32,7 +32,7 @@ def solve(expr: str, num_tests: int = 50, verbose:bool = False) -> tuple:
         cp.diag(x) == np.ones(n + 1),
         x.T == x
     ])
-    prob.solve(eps=1e-7, verbose=True)
+    prob.solve(eps=1e-7, verbose=verbose)
     result = np.linalg.cholesky(x.value + np.diag(np.zeros(n + 1) + 1e-6))
     values, scores = [], []
     time_delta = 0
@@ -40,8 +40,16 @@ def solve(expr: str, num_tests: int = 50, verbose:bool = False) -> tuple:
         # считаем только первую итерацию, потому что время должно считаться ровно для одного
         # запуска алгоритма
         cur = timer()
-        values.append(split_space(result))
-        scores.append(max(ev.score(values[-1]), ev.score(np.ones(n + 1) - values[-1])))
+        value1 = split_space(result)[1:]
+        value2 = not value1
+        score1 = ev.score(value1)
+        score2 = ev.score(value2)
+        if score1 > score2:
+            values.append(value1)
+            scores.append(score1)
+        else:
+            values.append(value2)
+            scores.append(score2)
         if _:
             time_delta += timer() - cur
     return n, values, scores, timer() - start_time - time_delta
@@ -51,7 +59,7 @@ def main(show_progress: bool = False, verbose: bool = False):
     cnt = 0
     for line in sys.stdin:
         n, values, scores, time = solve(line.strip(), verbose=verbose)
-        print(n, np.mean(scores), time)
+        print(n, np.mean(scores), time, sep='\t')
         if show_progress:
             cnt += 1
             print(cnt, file=sys.stderr)

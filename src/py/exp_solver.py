@@ -14,7 +14,7 @@ def solve(expr, verbose: bool = False, show_progress: bool = False) -> None:
         j = i
         while j:
             values.append(j % 2 == 1)
-            j /= 2
+            j //= 2
         cur = ev.score(values)
         if cur > best:
             desc = ev.get_values(values)
