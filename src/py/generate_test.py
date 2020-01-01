@@ -25,7 +25,7 @@ def generate(variables: int, disjoints: int, expressions: int, verbose: bool = F
 def main() -> None:
     if '--global-test' in sys.argv:
         for disjoints in range(1, 21):
-            for variables in range(max(1, disjoints - 6), disjoints + 1):
+            for variables in range(max(1, disjoints - 10), disjoints + 1):
                 print(generate(variables, disjoints, 5), end='')
     else:
         variables = int(sys.argv[1])
