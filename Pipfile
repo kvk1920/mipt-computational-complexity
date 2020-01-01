@@ -4,15 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-matplotlib = "*"
-ipython = "*"
-jupyter = "*"
 numpy = "*"
 cvxpy = "*"
-pep8 = "*"
-pycodestyle = "*"
-cvxopt = "*"
-scipy = "*"
 
 [dev-packages]
 
