@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 numpy = "*"
 cvxpy = "*"
+cvxopt = "*"
+scs = "*"
 
 [dev-packages]
 

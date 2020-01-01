@@ -1,7 +1,7 @@
-from py.evaluator import Evaluator
+from evaluator import Evaluator
+from timeit import default_timer as timer
 import cvxpy as cp
 import numpy as np
-import scipy.stats as sps
 import sys
 
 
@@ -11,12 +11,13 @@ def calc_negs(literal_0: str, literal_1: str) -> int:
 
 def split_space(solution):
     n = len(solution)
-    r = sps.norm.rvs(size=n)
-    r /= (r ** 2).sum()
+    r = np.random.normal(size=n)
+    r /= np.sqrt((r ** 2).sum())
     return np.array([v.T @ r >= 0 for v in solution])
 
 
-def solve(expr: str, num_tests: int = 50) -> tuple:
+def solve(expr: str, num_tests: int = 50, verbose:bool = False) -> tuple:
+    start_time = timer()
     ev = Evaluator(expr)
     n = len(ev.variables)
     w = np.zeros((n + 1, n + 1))
@@ -31,20 +32,30 @@ def solve(expr: str, num_tests: int = 50) -> tuple:
         cp.diag(x) == np.ones(n + 1),
         x.T == x
     ])
-    prob.solve(eps=1e-7)
+    prob.solve(eps=1e-7, verbose=True)
     result = np.linalg.cholesky(x.value + np.diag(np.zeros(n + 1) + 1e-6))
     values, scores = [], []
+    time_delta = 0
     for _ in range(num_tests):
+        # считаем только первую итерацию, потому что время должно считаться ровно для одного
+        # запуска алгоритма
+        cur = timer()
         values.append(split_space(result))
         scores.append(max(ev.score(values[-1]), ev.score(np.ones(n + 1) - values[-1])))
-    return values, scores
+        if _:
+            time_delta += timer() - cur
+    return n, values, scores, timer() - start_time - time_delta
 
 
-def main():
+def main(show_progress: bool = False, verbose: bool = False):
+    cnt = 0
     for line in sys.stdin:
-        values, scores = solve(line.strip())
-        print("2sat:", line.strip(), "mean score:", np.mean(scores), sep='\n')
+        n, values, scores, time = solve(line.strip(), verbose=verbose)
+        print(n, np.mean(scores), time)
+        if show_progress:
+            cnt += 1
+            print(cnt, file=sys.stderr)
 
 
 if '__main__' == __name__:
-    main()
+    main(show_progress='-p' in sys.argv, verbose='-v' in sys.argv)

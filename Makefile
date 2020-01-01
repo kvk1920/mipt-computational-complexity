@@ -13,10 +13,10 @@ generate_test:
 	pipenv run python3 src/py/generate_test.py --global-test > result/test.txt
 
 run_exp_solution:
-	pipenv run python3 src/py/exp_solver.py < result/test.txt > exp_res.txt
+	pipenv run python3 src/py/exp_solver.py -p < result/test.txt > result/exp_res.txt
 
 run_pol_solution:
-	pipenv run python3 src/py/pol_solver.py < result/test.txt > pol_res.txt
+	python3 src/py/pol_solver.py -p -v < result/test.txt > result/pol_res.txt
 
 results:
 	pipenv run python3 src/py/calc_results.py result/
