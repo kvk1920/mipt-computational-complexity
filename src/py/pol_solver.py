@@ -12,6 +12,7 @@ def calc_negs(literal_0: str, literal_1: str) -> int:
 def split_space(solution):
     n = len(solution)
     r = sps.norm.rvs(size=n)
+    r /= (r ** 2).sum()
     return np.array([v.T @ r >= 0 for v in solution])
 
 
